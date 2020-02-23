@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from celery.schedules import crontab
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -38,7 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_extensions',
+
     'account',
+    'currency',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +61,7 @@ ROOT_URLCONF = 'currency_exchange.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'account')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,6 +126,15 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
+AUTH_USER_MODEL = 'account.User'
+
+CELERY_BEAT_SCHEDULE = {
+    'parse-rates': {
+        'task': 'currency.tasks.parse_rates',
+        'schedule': crontab(minute='*/1')
+    }
+}
 try:
     from currency_exchange.settings_local import *  # noqa
 except ImportError:
