@@ -18,8 +18,8 @@ def vkurse():
 
             rate_kwargs = {
                 'currency': currency,
-                'buy': Decimal(r_json['Dollar']['buy']),
-                'sale': Decimal(r_json['Dollar']['sale']),
+                'buy': round(Decimal(r_json['Dollar']['buy'])),
+                'sale': round(Decimal(r_json['Dollar']['sale'])),
                 'source': mch.SR_VKURSE,
             }
 
@@ -34,8 +34,8 @@ def vkurse():
 
             rate_kwargs = {
                 'currency': currency,
-                'buy': Decimal(r_json['Euro']['buy']),
-                'sale': Decimal(r_json['Euro']['sale']),
+                'buy': round(Decimal(r_json['Euro']['buy'])),
+                'sale': round(Decimal(r_json['Euro']['sale'])),
                 'source': mch.SR_VKURSE,
             }
 
@@ -52,14 +52,36 @@ def pumb():
     page = requests.get("https://about.pumb.ua/info/currency_converter")
     soup = BeautifulSoup(page.content, 'html.parser')
     rates = soup.find(class_="exchange-rate")
+
     curr_rate = rates.find_all('td')
+    currencies = []
     usd_buy = curr_rate[1].get_text()
     usd_sell = curr_rate[2].get_text()
-    # TODO: Find out how to put obtained values to work
+    currencies.append({
+        'currency': mch.CURR_USD,
+        'buy': round(Decimal(usd_buy), 2),
+        'sale': round(Decimal(usd_sell), 2),
+        'source': mch.SR_PUMB,
+    })
 
     eur_buy = curr_rate[4].get_text()
     eur_sell = curr_rate[5].get_text()
-    # TODO: Find out how to put obtained values to work
+    currencies.append({
+        'currency': mch.CURR_EUR,
+        'buy': round(Decimal(eur_buy), 2),
+        'sale': round(Decimal(eur_sell), 2),
+        'source': mch.SR_PUMB,
+    })
+
+    for rate_kwargs in currencies:
+        Rate.objects.create(**rate_kwargs)
+        new_rate = Rate(**rate_kwargs)
+        last_rate = Rate.objects.filter(currency=rate_kwargs['currency'], source=rate_kwargs['source']).last()
+
+        # print(Rate.objects.filter(currency=currency, source=mch.SR_PRIVAT).query)
+        if last_rate is None or (last_rate and new_rate.buy != last_rate.buy or new_rate.sale != last_rate.sale):
+            new_rate.save()
+
 
 def privat():
     url = 'https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5'
@@ -118,7 +140,8 @@ def parse_rates(self):
     privat()
     mono()
     vkurse()
-    #pumb()
+    pumb()
+
 
 
 
