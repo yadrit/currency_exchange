@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Currency exchange
+{% endblock title %}
+
+{% block content %}
+
+
+  <div class="row">
+    <div class="col">
+        <a href="{% url 'index' %}">Index Link</a>
+    </div>
+    <div class="col">
+        {% if request.user.is_anonymous %}
+        <a href="{% url 'account:registration' %}">SignUp</a>
+        <a href="{% url 'login' %}">LogIn</a>
+        {% else %}
+        <a href="{% url 'logout' %}">LogOut</a>
+        {% endif %}
+    </div>
+  </div>
+
+
+{% endblock content %}

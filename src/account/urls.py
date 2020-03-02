@@ -8,4 +8,5 @@ app_name = 'account'
 
 urlpatterns = [
     path('smoke/', views.smoke, name='smoke'),
+    path('registration/', views.UserCreate.as_view(), name='registration')
 ]
