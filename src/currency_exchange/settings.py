@@ -42,8 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'django_extensions',
+   # "djcelery_email",
 
-    'account',
+    'account.apps.AccountConfig',
     'currency',
 ]
 
@@ -62,7 +63,7 @@ ROOT_URLCONF = 'currency_exchange.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'account')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,6 +145,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 AUTH_USER_MODEL = 'account.User'
 
@@ -157,7 +161,23 @@ CELERY_BEAT_SCHEDULE = {
 LOGIN_REDIRECT_URL = reverse_lazy('index')
 LOGOUT_REDIRECT_URL = reverse_lazy('index')
 
+
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'ivganivgan@gmail.com'
+EMAIL_HOST_PASSWORD = 'eugen22g1'
+
+# CELERY_EMAIL_TASK_CONFIG = {
+#     'name': 'djcelery_email_send',
+#     'ignore_result': True,
+# }
+
 try:
     from currency_exchange.settings_local import *  # noqa
 except ImportError:
-    print('settings_locat.py not found!\n * 5')
+    print('settings.py not found!\n * 5')
