@@ -24,3 +24,9 @@ sudo supervisorctl stop gunicorn
 
 # random image
 https://loremflickr.com/320/240/dog
+
+# enter the docker container's bash
+docker exec -it <containerId> bash
+
+# site with class-based views
+http://ccbv.co.uk/
