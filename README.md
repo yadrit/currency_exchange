@@ -30,3 +30,17 @@ docker exec -it <containerId> bash
 
 # site with class-based views
 http://ccbv.co.uk/
+
+# check logs in container
+
+# if project doesn't work and loads before the DB
+docker-compose -f dc.yml restart backend
+
+# run server on docker on different port
+docker exec -it backend python src/manage.py runserver 0:8001
+
+# questions for 22.03
+# 1) not sure if behaviour of index is correct
+# 2) can't load profile page (however i see new users)
+# 3) can't load site with 8000, but it loads with 8001
+# 4) celery doesn't work anymore
