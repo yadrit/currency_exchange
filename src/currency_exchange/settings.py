@@ -92,11 +92,11 @@ WSGI_APPLICATION = 'currency_exchange.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'currency_exchange',
-        'USER': 'ce',
-        'PASSWORD': '123456qwerty',
-        'HOST': 'postgres',
-        'PORT': '5432',
+        'NAME': os.environ['POSTGRES_DB'],
+        'USER': os.environ['POSTGRES_USER'],
+        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+        'HOST': os.environ['POSTGRES_HOST'],
+        'PORT': os.environ['POSTGRES_PORT'],
     }
 }
 
@@ -149,6 +149,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 AUTH_USER_MODEL = 'account.User'
 
 CELERY_BEAT_SCHEDULE = {
@@ -172,10 +175,14 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'ivganivgan@gmail.com'
 EMAIL_HOST_PASSWORD = 'eugen22g1'
 
-# CELERY_EMAIL_TASK_CONFIG = {
-#     'name': 'djcelery_email_send',
-#     'ignore_result': True,
-# }
+CELERY_BROKER_URL = 'amqp://{}:{}@{}:{}//'.format(
+    os.environ['RABBITMQ_DEFAULT_USER'],
+    # os.environ['RABBITMQ_DEFAULT_PASS'],
+    'guest',
+    os.environ['RABBITMQ_DEFAULT_HOST'],
+    os.environ['RABBITMQ_DEFAULT_PORT'],
+)
+
 
 try:
     from currency_exchange.settings_local import *  # noqa

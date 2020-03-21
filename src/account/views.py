@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView, View
 from account.models import User, Contact
 from account.tasks import send_email_async
 
@@ -21,7 +21,11 @@ class MyProfile(UpdateView):
     template_name = 'my_profile.html'
     queryset = User.objects.filter(is_active=True)
     fields = ('email', )
-    success_url = reverse_lazy('index')
+    success_url = "/"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(id=self.request.user.id)
 
 
 class ContactUs(CreateView):
