@@ -10,3 +10,5 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 STATIC_ROOT = os.path.join(BASE_DIR, '..', "static_content")
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

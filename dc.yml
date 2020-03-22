@@ -24,8 +24,11 @@ services:
   celery:
       build: .
       command: /bin/bash ./commands/start_celery.sh
+      # command: tail -f /dev/null
       container_name: celery
       restart: always
+      env_file:
+        - .env
       depends_on:
         - rabbitmq
         - postgres
@@ -37,6 +40,8 @@ services:
       command: celery -A currency_exchange beat -l info --workdir=/srv/project/src
       container_name: celerybeat
       restart: always
+      env_file:
+        - .env
       depends_on:
         - rabbitmq
         - postgres

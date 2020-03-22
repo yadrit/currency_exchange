@@ -13,7 +13,7 @@ urlpatterns = [
     path('account/', include('account.urls', namespace='account')),
     path('currency/', include('currency.urls', namespace='currency')),
 
-    path('', TemplateView.as_view(template_name='base.html'), name='index'),
+    path('', TemplateView.as_view(template_name='index.html'), name='index'),
 ]
 
 if settings.DEBUG:
