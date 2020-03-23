@@ -1,7 +1,7 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, DeleteView, UpdateView, View
+from django.views.generic.edit import CreateView, UpdateView, View
 from account.models import User, Contact, ActivationCode
 from account.tasks import send_email_async
 from account.forms import SignUpForm
