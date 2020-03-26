@@ -1,7 +1,7 @@
 import csv
 
 from django.http import HttpResponse
-from django.views.generic import View
+from django.views.generic import View, ListView
 
 
 from currency_exchange import settings
@@ -32,3 +32,10 @@ class RateCSV(View):
                 rate.get_source_display(),
             ]))
         return response
+
+
+class RatesList(ListView):
+    template_name = 'rates_list.html'
+    model = Rate
+    paginate_by = 20
+
