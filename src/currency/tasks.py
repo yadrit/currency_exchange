@@ -18,8 +18,8 @@ def vkurse():
 
             rate_kwargs = {
                 'currency': currency,
-                'buy': round(Decimal(r_json['Dollar']['buy'])),
-                'sale': round(Decimal(r_json['Dollar']['sale'])),
+                'buy': Decimal(r_json['Dollar']['buy']),
+                'sale': Decimal(r_json['Dollar']['sale']),
                 'source': mch.SR_VKURSE,
             }
 
@@ -34,8 +34,8 @@ def vkurse():
 
             rate_kwargs = {
                 'currency': currency,
-                'buy': round(Decimal(r_json['Euro']['buy'])),
-                'sale': round(Decimal(r_json['Euro']['sale'])),
+                'buy': round(Decimal(r_json['Euro']['buy']), 2),
+                'sale': round(Decimal(r_json['Euro']['sale']), 2),
                 'source': mch.SR_VKURSE,
             }
 
@@ -45,8 +45,6 @@ def vkurse():
             if last_rate is None or (last_rate and new_rate.buy != last_rate.buy or new_rate.sale != last_rate.sale):
                 new_rate.save()
 
-        else:
-            pass
 
 def pumb():
     page = requests.get("https://about.pumb.ua/info/currency_converter")
@@ -78,7 +76,6 @@ def pumb():
         new_rate = Rate(**rate_kwargs)
         last_rate = Rate.objects.filter(currency=rate_kwargs['currency'], source=rate_kwargs['source']).last()
 
-        # print(Rate.objects.filter(currency=currency, source=mch.SR_PRIVAT).query)
         if last_rate is None or (last_rate and new_rate.buy != last_rate.buy or new_rate.sale != last_rate.sale):
             new_rate.save()
 
@@ -132,7 +129,6 @@ def mono():
 
             if last_rate is None or (last_rate and new_rate.buy != last_rate.buy or new_rate.sale != last_rate.sale):
                 new_rate.save()
-
 
 
 @shared_task(bind=True)
