@@ -49,5 +49,5 @@ wcwidth==0.1.8
 zipp==2.2.0
 beautifulsoup4==4.8.2
 soupsieve==2.0
-urllib3==1.25.8
+urllib3==1.26.5
 user-agent==0.1.9
